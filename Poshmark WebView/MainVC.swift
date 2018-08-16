@@ -17,9 +17,16 @@ class MainVC: UIViewController, WKNavigationDelegate {
         super.viewDidLoad()
         
         webViewSetup()
+        addConstraints()
         setupNavigationBarItems()
         
+        
         view.addSubview(webView)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        webView.loadUrl(string: "https://www.poshmark.com")
     }
     
     private func setupNavigationBarItems() {
@@ -32,7 +39,10 @@ class MainVC: UIViewController, WKNavigationDelegate {
     }
     
     @objc private func startScriptButtonAction(_ sender: UIButton?) {
-        
+        webView.evaluateJavaScript("HelloWorld()") { (data, error) in
+            print(data)
+            print(error)
+        }
     }
     
     private func webViewSetup() {
@@ -40,7 +50,6 @@ class MainVC: UIViewController, WKNavigationDelegate {
         let contentController = WKUserContentController()
         config.userContentController = contentController
 
-        
         // Get Script
         guard let scriptPath = Bundle.main.path(forResource: "script", ofType: "js"), let scriptSource = try? String(contentsOfFile: scriptPath) else { return }
         let script = WKUserScript(source: scriptSource, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
@@ -57,11 +66,11 @@ class MainVC: UIViewController, WKNavigationDelegate {
         let layoutGuide = view.safeAreaLayoutGuide
         
         // WebView
-        webView.translatesAutoresizingMaskIntoConstraints = false
         webView.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor).isActive = true
         webView.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor).isActive = true
         webView.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: 100).isActive = true
         webView.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor).isActive = true
+        webView.translatesAutoresizingMaskIntoConstraints = false
     }
 
 }
@@ -72,9 +81,14 @@ extension MainVC: WKScriptMessageHandler {
             print(messageBody)
         }
     }
-    
-    
 }
 
+extension WKWebView {
+    func loadUrl(string: String) {
+        if let url = URL(string: string) {
+            load(URLRequest(url: url))
+        }
+    }
+}
 
 
