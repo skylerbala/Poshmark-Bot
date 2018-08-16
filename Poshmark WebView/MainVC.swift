@@ -34,6 +34,7 @@ class MainVC: UIViewController, WKNavigationDelegate {
             webView.allowsBackForwardNavigationGestures = true
         }
     }
+    kajsfsfsjhfkdjhf
     
     private func setupNavigationBarItems() {
         let startScriptButton = UIButton(type: UIButtonType.system)
