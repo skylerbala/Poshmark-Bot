@@ -20,21 +20,7 @@ class MainVC: UIViewController, WKNavigationDelegate {
         setupNavigationBarItems()
         
         view.addSubview(webView)
-        
-        let layoutGuide = view.safeAreaLayoutGuide
-        
-        webView.translatesAutoresizingMaskIntoConstraints = false
-        webView.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor).isActive = true
-        webView.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor).isActive = true
-        webView.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: 100).isActive = true
-        webView.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor).isActive = true
-        
-        if let url = URL(string: "https://www.poshmark.com") {
-            webView.load(URLRequest(url: url))
-            webView.allowsBackForwardNavigationGestures = true
-        }
     }
-    kajsfsfsjhfkdjhf
     
     private func setupNavigationBarItems() {
         let startScriptButton = UIButton(type: UIButtonType.system)
@@ -49,20 +35,33 @@ class MainVC: UIViewController, WKNavigationDelegate {
         
     }
     
-    func webViewSetup() {
+    private func webViewSetup() {
+        let config = WKWebViewConfiguration()
         let contentController = WKUserContentController()
-        contentController.add(self, name: "test")
+        config.userContentController = contentController
+
         
+        // Get Script
         guard let scriptPath = Bundle.main.path(forResource: "script", ofType: "js"), let scriptSource = try? String(contentsOfFile: scriptPath) else { return }
-        
         let script = WKUserScript(source: scriptSource, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
         
+        // Add Scripts
         contentController.addUserScript(script)
         
-        let config = WKWebViewConfiguration()
-        config.userContentController = contentController
-        
+        // Create WebView
         webView = WKWebView(frame: .zero, configuration: config)
+    }
+    
+    
+    private func addConstraints() {
+        let layoutGuide = view.safeAreaLayoutGuide
+        
+        // WebView
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        webView.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor).isActive = true
+        webView.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor).isActive = true
+        webView.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: 100).isActive = true
+        webView.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor).isActive = true
     }
 
 }
