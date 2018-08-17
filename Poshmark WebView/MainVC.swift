@@ -12,21 +12,22 @@ import WebKit
 class MainVC: UIViewController, WKNavigationDelegate {
     
     var webView: WKWebView!
+    var scriptStart: Bool = false
+    var funcOrder: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         webViewSetup()
-        addConstraints()
         setupNavigationBarItems()
         
-        
         view.addSubview(webView)
+        addConstraints()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        webView.loadUrl(string: "https://www.poshmark.com")
+        webView.loadUrl(string: "https://poshmark.com/login")
     }
     
     private func setupNavigationBarItems() {
@@ -39,9 +40,19 @@ class MainVC: UIViewController, WKNavigationDelegate {
     }
     
     @objc private func startScriptButtonAction(_ sender: UIButton?) {
-        webView.evaluateJavaScript("HelloWorld()") { (data, error) in
-            print(data)
-            print(error)
+        scriptStart = true
+        webView.evaluateJavaScript("p.currLink.click()")
+    }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == #keyPath(WKWebView.isLoading) {
+            if funcOrder == 0 && !webView.isLoading && scriptStart {
+                webView.evaluateJavaScript("p.getFollowLink().click()")
+                funcOrder += 1
+            }
+            else if funcOrder == 1 && !webView.isLoading && scriptStart {
+                webView.evaluateJavaScript("p.scroll()")
+            }
         }
     }
     
@@ -53,19 +64,21 @@ class MainVC: UIViewController, WKNavigationDelegate {
         // Get Script
         guard let scriptPath = Bundle.main.path(forResource: "script", ofType: "js"), let scriptSource = try? String(contentsOfFile: scriptPath) else { return }
         let script = WKUserScript(source: scriptSource, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
-        
         // Add Scripts
         contentController.addUserScript(script)
         
         // Create WebView
         webView = WKWebView(frame: .zero, configuration: config)
+        
+        // Add Observer
+        webView.addObserver(self, forKeyPath: #keyPath(WKWebView.isLoading), options: .new, context: nil)
     }
     
     
     private func addConstraints() {
         let layoutGuide = view.safeAreaLayoutGuide
         
-        // WebView
+        // WebView                  
         webView.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor).isActive = true
         webView.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor).isActive = true
         webView.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: 100).isActive = true
