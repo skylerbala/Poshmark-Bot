@@ -14,6 +14,10 @@ class MainVC: UIViewController, WKNavigationDelegate {
     var webView: WKWebView!
     var scriptStart: Bool = false
     var funcOrder: Int = 0
+    var userProfileLinks: [String] = []
+    var currLinkCounter: Int = 0
+    
+    var startScriptButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,7 +35,7 @@ class MainVC: UIViewController, WKNavigationDelegate {
     }
     
     private func setupNavigationBarItems() {
-        let startScriptButton = UIButton(type: UIButtonType.system)
+        startScriptButton = UIButton(type: UIButtonType.system)
         startScriptButton.setTitle("Start Script", for: UIControlState.normal)
         startScriptButton.frame = CGRect(x: 0, y: 0, width: 100, height: 50)
         startScriptButton.addTarget(self, action: #selector(startScriptButtonAction(_:)), for: UIControlEvents.touchUpInside)
@@ -41,16 +45,24 @@ class MainVC: UIViewController, WKNavigationDelegate {
     
     @objc private func startScriptButtonAction(_ sender: UIButton?) {
         scriptStart = true
-        webView.evaluateJavaScript("p.currLink.click()")
+        funcOrder = 0
+        currLinkCounter = 0
+        webView.loadUrl(string: "https://poshmark.com/feed")
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == #keyPath(WKWebView.isLoading) {
             if funcOrder == 0 && !webView.isLoading && scriptStart {
+                webView.evaluateJavaScript("p.getUserProfiles()") { (data, error) in
+                    self.webView.loadUrl(string: self.userProfileLinks[self.currLinkCounter])
+                    self.funcOrder += 1
+                }
+            }
+            else if funcOrder == 1 && !webView.isLoading && scriptStart {
                 webView.evaluateJavaScript("p.getFollowLink().click()")
                 funcOrder += 1
             }
-            else if funcOrder == 1 && !webView.isLoading && scriptStart {
+            else if funcOrder == 2 && !webView.isLoading && scriptStart {
                 webView.evaluateJavaScript("p.scroll()")
             }
         }
@@ -64,8 +76,14 @@ class MainVC: UIViewController, WKNavigationDelegate {
         // Get Script
         guard let scriptPath = Bundle.main.path(forResource: "script", ofType: "js"), let scriptSource = try? String(contentsOfFile: scriptPath) else { return }
         let script = WKUserScript(source: scriptSource, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+        
         // Add Scripts
         contentController.addUserScript(script)
+        
+        // Add ScriptMessageHandlers
+        contentController.add(self, name: "nextUser")
+        contentController.add(self, name: "userProfileLinks")
+        contentController.add(self, name: "reset")
         
         // Create WebView
         webView = WKWebView(frame: .zero, configuration: config)
@@ -90,8 +108,20 @@ class MainVC: UIViewController, WKNavigationDelegate {
 
 extension MainVC: WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        if message.name == "test", let messageBody = message.body as? String {
-            print(messageBody)
+        if message.name == "nextUser", let messageBody = message.body as? String {
+            currLinkCounter += 1
+            funcOrder = 1
+            webView.loadUrl(string: userProfileLinks[currLinkCounter])
+        }
+        
+        if message.name == "userProfileLinks", let messageBody = message.body as? [String] {
+            userProfileLinks = messageBody
+        }
+        
+        if message.name == "reset", let messageBody = message.body as? String {
+            webView.stopLoading()
+            webView.reload()
+            funcOrder = 3
         }
     }
 }

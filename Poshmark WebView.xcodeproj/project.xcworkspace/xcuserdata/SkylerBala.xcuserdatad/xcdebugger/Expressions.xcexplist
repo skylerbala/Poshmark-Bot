@@ -3,15 +3,51 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "closure #1 in MainVC.startScriptButtonAction(_:):MainVC.swift">
+         contextName = "MainVC.viewDidLoad():MainVC.swift">
+      </ContextState>
+      <ContextState
+         contextName = "MainVC.userContentController(_:didReceive:):MainVC.swift">
          <PersistentStrings>
+            <PersistentString
+               value = "userProfileLinks">
+            </PersistentString>
+            <PersistentString
+               value = "currLinkCounter">
+            </PersistentString>
+            <PersistentString
+               value = "message.name">
+            </PersistentString>
+            <PersistentString
+               value = "funcOrder">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "MainVC.observeValue(forKeyPath:of:change:context:):MainVC.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "scriptStart">
+            </PersistentString>
             <PersistentString
                value = "webView.isLoading">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "MainVC.viewDidLoad():MainVC.swift">
+         contextName = "closure #1 in MainVC.observeValue(forKeyPath:of:change:context:):MainVC.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "currLinkCounter">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in MainVC.startScriptButtonAction(_:):MainVC.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "webView.isLoading">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "MainVC.webViewSetup():MainVC.swift">
