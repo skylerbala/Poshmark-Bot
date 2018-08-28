@@ -8,15 +8,32 @@
 
 import UIKit
 import WebKit
+import UserNotifications
+
 
 class MainViewController: UIViewController, WKNavigationDelegate {
     
     var webView: WKWebView!
+    var isWebViewDisplayed: Bool = true
+    
+    let statusView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.black
+        return view
+    }()
+    
+    let followCountLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = UIColor.white
+        label.text = "Follows Count: 0"
+        return label
+    }()
     
     var isScriptActive: Bool = false
     var jsFuncStep: BotStep = BotStep.getUserProfileLinks
     var userProfileLinks: [String] = []
     var currUserLinkCounter: Int = 0
+    var followsCount: Int = 0
     
     var scriptActions: [UIAlertAction]!
     var scriptMenuAlertController: UIAlertController!
@@ -38,8 +55,24 @@ class MainViewController: UIViewController, WKNavigationDelegate {
     }
     
     func setNavBar() {
-        let scriptMenuBarButton = UIBarButtonItem(title: "Scripts", style: UIBarButtonItemStyle.plain, target: self, action: #selector(scriptMenuButtonAction))
+        let scriptMenuBarButton = UIBarButtonItem(title: "Scripts", style: .plain, target: self, action: #selector(scriptMenuButtonAction))
         navigationItem.rightBarButtonItem = scriptMenuBarButton
+        
+        let webViewDisplayButton = UIBarButtonItem(title: "Show Browser", style: .plain, target: self, action: #selector(toggleWebViewDisplay))
+        navigationItem.leftBarButtonItem = webViewDisplayButton
+    }
+    
+    @objc func toggleWebViewDisplay() {
+        if isWebViewDisplayed {
+            navigationItem.leftBarButtonItem?.title = "Hide Browser"
+            webView.isHidden = true
+            isWebViewDisplayed = false
+        }
+        else {
+            navigationItem.leftBarButtonItem?.title = "Show Browser"
+            webView.isHidden = false
+            isWebViewDisplayed = true
+        }
     }
     
     @objc func scriptMenuButtonAction() {
@@ -92,6 +125,7 @@ class MainViewController: UIViewController, WKNavigationDelegate {
         contentController.add(self, name: "nextUser")
         contentController.add(self, name: "userProfileLinks")
         contentController.add(self, name: "reset")
+        contentController.add(self, name: "followCountIncrement")
         
         // Create WebView
         webView = WKWebView(frame: .zero, configuration: config)
@@ -129,7 +163,18 @@ extension MainViewController: WKScriptMessageHandler {
         }
         
         if message.name == "reset", let messageBody = message.body as? String {
-            startScript()
+            let notificationCenter = UNUserNotificationCenter.current()
+            let content = UNMutableNotificationContent()
+            content.title = "Complete reCaptcha"
+            content.subtitle = "Log-In and complete the required reCaptcha to continue"
+            let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
+            notificationCenter.add(request, withCompletionHandler: { (error) in
+            })
+        }
+        
+        if message.name == "followCountIncrement", let messageBody = message.body as? Int {
+            followsCount = messageBody
+            followCountLabel.text = "Follow Count: \(followsCount)"
         }
     }
 }

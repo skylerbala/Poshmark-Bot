@@ -26,17 +26,17 @@ class PoshmarkBot {
   }
 
   scrollAndLoad() {
-    window.scrollBy(0,10000);
+    window.scrollBy(0,999999);
     let followList = document.querySelector(".follower-following-list")
     let timer = setTimeout(() => {
-      window.scrollBy(0, -100000)
+      window.scrollBy(0, -999999)
       this.followUsers();
     }, 10000)
     followList.addEventListener("DOMSubtreeModified", () => {
-      window.scrollBy(0,10000);
+      window.scrollBy(0,999999);
       clearInterval(timer);
       timer = setTimeout(() => {
-        window.scrollBy(0, -100000)
+        window.scrollBy(0, -999999)
         this.followUsers();
       }, 10000);
     })
@@ -47,12 +47,12 @@ class PoshmarkBot {
     var follows = 0;
     var timer;
     var timers = [];
+    var followsCount = 0;
     for (let i = 0; i < users.length; i++) {
       if (users[i].getAttribute('class') === "auth-required btn blue") {
         follows++;
         timers.push(setTimeout(() => {
           follows--;
-          console.log(follows)
           if (follows == 0) {
             console.log(follows)
             window.webkit.messageHandlers.nextUser.postMessage("Success");
@@ -68,7 +68,9 @@ class PoshmarkBot {
             }
           }
           users[i].click();
-        }, 5000 * follows));
+          followsCount++
+          window.webkit.messageHandlers.followCountIncrement.postMessage(followsCount);
+        }, 100 * follows));
       }
     }
 
