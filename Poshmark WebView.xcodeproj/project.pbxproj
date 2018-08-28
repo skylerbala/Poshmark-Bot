@@ -8,14 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		9F1FFC7B212588240008A2E9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F1FFC7A212588240008A2E9 /* AppDelegate.swift */; };
-		9F1FFC7D212588240008A2E9 /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F1FFC7C212588240008A2E9 /* MainVC.swift */; };
-		9F1FFC80212588240008A2E9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9F1FFC7E212588240008A2E9 /* Main.storyboard */; };
+		9F1FFC7D212588240008A2E9 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F1FFC7C212588240008A2E9 /* MainViewController.swift */; };
 		9F1FFC83212588240008A2E9 /* Poshmark_WebView.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9F1FFC81212588240008A2E9 /* Poshmark_WebView.xcdatamodeld */; };
 		9F1FFC85212588240008A2E9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9F1FFC84212588240008A2E9 /* Assets.xcassets */; };
 		9F1FFC88212588240008A2E9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9F1FFC86212588240008A2E9 /* LaunchScreen.storyboard */; };
 		9F1FFC93212588240008A2E9 /* Poshmark_WebViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F1FFC92212588240008A2E9 /* Poshmark_WebViewTests.swift */; };
 		9F1FFC9E212588240008A2E9 /* Poshmark_WebViewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F1FFC9D212588240008A2E9 /* Poshmark_WebViewUITests.swift */; };
 		9F1FFCAC212597BB0008A2E9 /* script.js in Resources */ = {isa = PBXBuildFile; fileRef = 9F1FFCAB212597BB0008A2E9 /* script.js */; };
+		9FA8732A21350CD8003256A0 /* MainConstraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FA8732921350CD8003256A0 /* MainConstraints.swift */; };
+		9FA8732C21350D77003256A0 /* WKWebView+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FA8732B21350D77003256A0 /* WKWebView+Additions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,8 +39,7 @@
 /* Begin PBXFileReference section */
 		9F1FFC77212588240008A2E9 /* Poshmark WebView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Poshmark WebView.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F1FFC7A212588240008A2E9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		9F1FFC7C212588240008A2E9 /* MainVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainVC.swift; sourceTree = "<group>"; };
-		9F1FFC7F212588240008A2E9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		9F1FFC7C212588240008A2E9 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		9F1FFC82212588240008A2E9 /* Poshmark_WebView.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Poshmark_WebView.xcdatamodel; sourceTree = "<group>"; };
 		9F1FFC84212588240008A2E9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9F1FFC87212588240008A2E9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -51,6 +51,8 @@
 		9F1FFC9D212588240008A2E9 /* Poshmark_WebViewUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Poshmark_WebViewUITests.swift; sourceTree = "<group>"; };
 		9F1FFC9F212588240008A2E9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9F1FFCAB212597BB0008A2E9 /* script.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = script.js; sourceTree = "<group>"; };
+		9FA8732921350CD8003256A0 /* MainConstraints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainConstraints.swift; sourceTree = "<group>"; };
+		9FA8732B21350D77003256A0 /* WKWebView+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WKWebView+Additions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,14 +103,14 @@
 		9F1FFC79212588240008A2E9 /* Poshmark WebView */ = {
 			isa = PBXGroup;
 			children = (
-				9F1FFC7A212588240008A2E9 /* AppDelegate.swift */,
-				9F1FFC7C212588240008A2E9 /* MainVC.swift */,
-				9F1FFC7E212588240008A2E9 /* Main.storyboard */,
+				9FA8732821350C31003256A0 /* Models */,
+				9FA8732221350B68003256A0 /* Assets */,
+				9FA8732121350B57003256A0 /* Application */,
+				9FA8732321350B78003256A0 /* Scripts */,
 				9F1FFC84212588240008A2E9 /* Assets.xcassets */,
 				9F1FFC86212588240008A2E9 /* LaunchScreen.storyboard */,
 				9F1FFC89212588240008A2E9 /* Info.plist */,
 				9F1FFC81212588240008A2E9 /* Poshmark_WebView.xcdatamodeld */,
-				9F1FFCAB212597BB0008A2E9 /* script.js */,
 			);
 			path = "Poshmark WebView";
 			sourceTree = "<group>";
@@ -129,6 +131,63 @@
 				9F1FFC9F212588240008A2E9 /* Info.plist */,
 			);
 			path = "Poshmark WebViewUITests";
+			sourceTree = "<group>";
+		};
+		9FA8732121350B57003256A0 /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				9FA8732421350BA4003256A0 /* Main */,
+				9FA8732621350BDD003256A0 /* Common */,
+				9FA8732721350BE3003256A0 /* Extensions */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
+		9FA8732221350B68003256A0 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
+		9FA8732321350B78003256A0 /* Scripts */ = {
+			isa = PBXGroup;
+			children = (
+				9F1FFCAB212597BB0008A2E9 /* script.js */,
+			);
+			path = Scripts;
+			sourceTree = "<group>";
+		};
+		9FA8732421350BA4003256A0 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				9F1FFC7A212588240008A2E9 /* AppDelegate.swift */,
+				9F1FFC7C212588240008A2E9 /* MainViewController.swift */,
+				9FA8732921350CD8003256A0 /* MainConstraints.swift */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		9FA8732621350BDD003256A0 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		9FA8732721350BE3003256A0 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				9FA8732B21350D77003256A0 /* WKWebView+Additions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		9FA8732821350C31003256A0 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -241,7 +300,6 @@
 				9F1FFC88212588240008A2E9 /* LaunchScreen.storyboard in Resources */,
 				9F1FFCAC212597BB0008A2E9 /* script.js in Resources */,
 				9F1FFC85212588240008A2E9 /* Assets.xcassets in Resources */,
-				9F1FFC80212588240008A2E9 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -266,7 +324,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9F1FFC7D212588240008A2E9 /* MainVC.swift in Sources */,
+				9FA8732A21350CD8003256A0 /* MainConstraints.swift in Sources */,
+				9F1FFC7D212588240008A2E9 /* MainViewController.swift in Sources */,
+				9FA8732C21350D77003256A0 /* WKWebView+Additions.swift in Sources */,
 				9F1FFC7B212588240008A2E9 /* AppDelegate.swift in Sources */,
 				9F1FFC83212588240008A2E9 /* Poshmark_WebView.xcdatamodeld in Sources */,
 			);
@@ -304,14 +364,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		9F1FFC7E212588240008A2E9 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				9F1FFC7F212588240008A2E9 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		9F1FFC86212588240008A2E9 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (

@@ -1,34 +1,31 @@
 class PoshmarkBot {
-  constructor() {
 
-  }
-  
-  getUserProfiles() {
+  getUserProfileLinks() {
     let tags = document.querySelectorAll("a.creator");
     let links = [];
     tags.forEach((tag) => {
       links.push(tag.href);
     });
     window.webkit.messageHandlers.userProfileLinks.postMessage(links);
-    return links;
   }
 
-  getFollowLink() {
+  getFollowPageLink() {
     // for web it's "ul#closet-info" or for mobile "ul#m-closet-info" 
     let followers = document.querySelector("ul#m-closet-info").childNodes[2]
     followers = followers.querySelector('.count')
     let followersLink = followers.parentNode
-    let followersCount = Number(followers.textContent.trim().split(',').join(''))
 
     let followings = document.querySelector("ul#m-closet-info").childNodes[3]
     followings = followings.querySelector('.count')
     let followingsLink = followings.parentNode
+
+    let followersCount = Number(followers.textContent.trim().split(',').join(''))
     let followingsCount = Number(followings.textContent.trim().split(',').join(''))
 
     return followersCount > followingsCount ? followersLink : followingsLink
   }
 
-  scroll() {
+  scrollAndLoad() {
     window.scrollBy(0,10000);
     let followList = document.querySelector(".follower-following-list")
     let timer = setTimeout(() => {
@@ -45,7 +42,7 @@ class PoshmarkBot {
     })
   }
 
-  followUsers() {/Users/admin/Desktop/Developer/Poshmark WebView/Poshmark WebView/script.js
+  followUsers() {
     let users = document.querySelectorAll('#follow-user');
     var follows = 0;
     var timer;
@@ -82,6 +79,3 @@ class PoshmarkBot {
 }
 
 p = new PoshmarkBot()
-
-
-
