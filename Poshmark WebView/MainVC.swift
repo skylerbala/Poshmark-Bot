@@ -119,9 +119,7 @@ extension MainVC: WKScriptMessageHandler {
         }
         
         if message.name == "reset", let messageBody = message.body as? String {
-            webView.stopLoading()
-            webView.reload()
-            funcOrder = 3
+            startScriptButton.sendActions(for: .touchUpInside)
         }
     }
 }
