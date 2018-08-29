@@ -29,10 +29,11 @@ class MainViewController: UIViewController, WKNavigationDelegate {
         return label
     }()
     
-    var isScriptActive: Bool = false
-    var jsFuncStep: BotStep = BotStep.getUserProfileLinks
-    var userProfileLinks: [String] = []
-    var currUserLinkCounter: Int = 0
+    var isFBOTActive: Bool = false
+    var isCSBOTActive: Bool = false
+    var jsFuncStep: Int = 0
+    var links: [String] = []
+    var currLinkCounter: Int = 0
     var followsCount: Int = 0
     
     var scriptActions: [UIAlertAction]!
@@ -79,31 +80,49 @@ class MainViewController: UIViewController, WKNavigationDelegate {
         present(scriptMenuAlertController, animated: true, completion: nil)
     }
     
-    func startScript() {
-        isScriptActive = true
-        jsFuncStep = .getUserProfileLinks
+    func startFBOT() {
+        isFBOTActive = true
+        jsFuncStep = 0
         webView.loadUrl(string: homeFeedURL)
-        currUserLinkCounter = 0
+        currLinkCounter = 0
     }
     
-    func stopScript() {
-        isScriptActive = false
+    func startCSBOT() {
+        isCSBOTActive = true
+        jsFuncStep = 0
+        webView.loadUrl(string: homeFeedURL)
+        currLinkCounter = 0
+    }
+    
+    func stopFBOT() {
+        isFBOTActive = false
+    }
+    
+    func stopCSBOT() {
+        isCSBOTActive = false
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == #keyPath(WKWebView.isLoading) {
-            if jsFuncStep == .getUserProfileLinks && !webView.isLoading && isScriptActive {
-                webView.evaluateJavaScript("p.getUserProfileLinks()") { (data, error) in
-                    self.webView.loadUrl(string: self.userProfileLinks[self.currUserLinkCounter])
-                    self.jsFuncStep = .getFollowPageLinks
+            if jsFuncStep == 0 && !webView.isLoading && isFBOTActive {
+                webView.evaluateJavaScript("FBOT.getUserProfileLinks()") { (data, error) in
+                    self.webView.loadUrl(string: self.links[self.currLinkCounter])
+                    self.jsFuncStep += 1
                 }
             }
-            else if jsFuncStep == .getFollowPageLinks && !webView.isLoading && isScriptActive {
-                webView.evaluateJavaScript("p.getFollowPageLink().click()")
-                jsFuncStep = .scrollAndLoad
+            else if jsFuncStep == 1 && !webView.isLoading && isFBOTActive {
+                webView.evaluateJavaScript("FBOT.getFollowPageLink()")
+                jsFuncStep += 1
             }
-            else if jsFuncStep == .scrollAndLoad && !webView.isLoading && isScriptActive {
-                webView.evaluateJavaScript("p.scrollAndLoad()")
+            else if jsFuncStep == 2 && !webView.isLoading && isFBOTActive {
+                webView.evaluateJavaScript("FBOT.scroll()")
+            }
+            
+            if jsFuncStep == 0 && !webView.isLoading && isCSBOTActive {
+                webView.evaluateJavaScript("CSBOT.scroll()")
+            }
+            else if jsFuncStep == 1 && !webView.isLoading && isCSBOTActive {
+                webView.evaluateJavaScript("CSBOT.commentShare()")
             }
         }
     }
@@ -122,10 +141,13 @@ class MainViewController: UIViewController, WKNavigationDelegate {
         contentController.addUserScript(script)
         
         // Add ScriptMessageHandlers
-        contentController.add(self, name: "nextUser")
-        contentController.add(self, name: "userProfileLinks")
-        contentController.add(self, name: "reset")
-        contentController.add(self, name: "followCountIncrement")
+        contentController.add(self, name: "FBOTnextUser")
+        contentController.add(self, name: "FBOTuserProfileLinks")
+        contentController.add(self, name: "FBOTreset")
+        contentController.add(self, name: "FBOTfollowCountIncrement")
+        
+        contentController.add(self, name: "CSBOTgetItemLinks")
+        contentController.add(self, name: "CSBOTnext")
         
         // Create WebView
         webView = WKWebView(frame: .zero, configuration: config)
@@ -136,14 +158,19 @@ class MainViewController: UIViewController, WKNavigationDelegate {
     
     func setScriptMenu() {
         scriptMenuAlertController = UIAlertController(title: "Script Actions", message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
-        let startAction = UIAlertAction(title: "Start", style: UIAlertActionStyle.default) { (action) in
-            self.startScript()
+        let FBOT = UIAlertAction(title: "Start Follow Bot", style: UIAlertActionStyle.default) { (action) in
+            self.startFBOT()
         }
-        let stopAction = UIAlertAction(title: "Stop", style: UIAlertActionStyle.default) { (action) in
-            self.stopScript()
+        let CSBOT = UIAlertAction(title: "Start Comment Share Bot", style: UIAlertActionStyle.default) { (action) in
+            self.startCSBOT()
+        }
+        let stopAction = UIAlertAction(title: "Stop All Bots", style: UIAlertActionStyle.default) { (action) in
+            self.stopFBOT()
+            self.stopCSBOT()
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil)
-        scriptMenuAlertController.addAction(startAction)
+        scriptMenuAlertController.addAction(FBOT)
+        scriptMenuAlertController.addAction(CSBOT)
         scriptMenuAlertController.addAction(stopAction)
         scriptMenuAlertController.addAction(cancelAction)
 
@@ -152,17 +179,17 @@ class MainViewController: UIViewController, WKNavigationDelegate {
 
 extension MainViewController: WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        if message.name == "nextUser", let messageBody = message.body as? String {
-            currUserLinkCounter += 1
-            jsFuncStep = .getFollowPageLinks
-            webView.loadUrl(string: userProfileLinks[currUserLinkCounter])
+        if message.name == "FBOTnextUser", let messageBody = message.body as? String {
+            currLinkCounter += 1
+            jsFuncStep = 1
+            webView.loadUrl(string: links[currLinkCounter])
         }
         
-        if message.name == "userProfileLinks", let messageBody = message.body as? [String] {
-            userProfileLinks = messageBody
+        if message.name == "FBOTuserProfileLinks", let messageBody = message.body as? [String] {
+            links = messageBody
         }
         
-        if message.name == "reset", let messageBody = message.body as? String {
+        if message.name == "FBOTreset", let messageBody = message.body as? String {
             let notificationCenter = UNUserNotificationCenter.current()
             let content = UNMutableNotificationContent()
             content.title = "Complete reCaptcha"
@@ -172,17 +199,25 @@ extension MainViewController: WKScriptMessageHandler {
             })
         }
         
-        if message.name == "followCountIncrement", let messageBody = message.body as? Int {
+        
+        
+        if message.name == "CSBOTgetItemLinks", let messageBody = message.body as? [String] {
+            links = messageBody
+            jsFuncStep += 1
+            webView.loadUrl(string: links[currLinkCounter])
+        }
+        
+        if message.name == "CSBOTnext", let messageBody = message.body as? String {
+            currLinkCounter += 1
+            jsFuncStep = 1
+            webView.loadUrl(string: links[currLinkCounter])
+        }
+        
+        if message.name == "FBOTfollowCountIncrement", let messageBody = message.body as? Int {
             followsCount = messageBody
             followCountLabel.text = "Follow Count: \(followsCount)"
         }
     }
-}
-
-enum BotStep: Int {
-    case getUserProfileLinks = 0
-    case getFollowPageLinks = 1
-    case scrollAndLoad = 2
 }
 
 

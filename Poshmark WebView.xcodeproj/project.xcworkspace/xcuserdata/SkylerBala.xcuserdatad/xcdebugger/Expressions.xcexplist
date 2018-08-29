@@ -3,22 +3,18 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "MainVC.viewDidLoad():MainVC.swift">
-      </ContextState>
-      <ContextState
-         contextName = "MainVC.userContentController(_:didReceive:):MainVC.swift">
+         contextName = "closure #1 in MainVC.observeValue(forKeyPath:of:change:context:):MainVC.swift">
          <PersistentStrings>
-            <PersistentString
-               value = "userProfileLinks">
-            </PersistentString>
             <PersistentString
                value = "currLinkCounter">
             </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "MainViewController.userContentController(_:didReceive:):MainViewController.swift">
+         <PersistentStrings>
             <PersistentString
                value = "message.name">
-            </PersistentString>
-            <PersistentString
-               value = "funcOrder">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -34,10 +30,25 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "closure #1 in MainVC.observeValue(forKeyPath:of:change:context:):MainVC.swift">
+         contextName = "MainVC.webViewSetup():MainVC.swift">
+      </ContextState>
+      <ContextState
+         contextName = "MainVC.viewDidLoad():MainVC.swift">
+      </ContextState>
+      <ContextState
+         contextName = "MainVC.userContentController(_:didReceive:):MainVC.swift">
          <PersistentStrings>
             <PersistentString
+               value = "userProfileLinks">
+            </PersistentString>
+            <PersistentString
+               value = "message.name">
+            </PersistentString>
+            <PersistentString
                value = "currLinkCounter">
+            </PersistentString>
+            <PersistentString
+               value = "funcOrder">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -48,9 +59,6 @@
                value = "webView.isLoading">
             </PersistentString>
          </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "MainVC.webViewSetup():MainVC.swift">
       </ContextState>
    </ContextStates>
 </VariablesViewState>

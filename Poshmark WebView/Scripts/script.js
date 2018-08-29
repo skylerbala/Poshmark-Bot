@@ -1,4 +1,4 @@
-class PoshmarkBot {
+class FollowBot {
 
   getUserProfileLinks() {
     let tags = document.querySelectorAll("a.creator");
@@ -6,7 +6,7 @@ class PoshmarkBot {
     tags.forEach((tag) => {
       links.push(tag.href);
     });
-    window.webkit.messageHandlers.userProfileLinks.postMessage(links);
+    window.webkit.messageHandlers.FBOTuserProfileLinks.postMessage(links);
   }
 
   getFollowPageLink() {
@@ -22,10 +22,15 @@ class PoshmarkBot {
     let followersCount = Number(followers.textContent.trim().split(',').join(''))
     let followingsCount = Number(followings.textContent.trim().split(',').join(''))
 
-    return followersCount > followingsCount ? followersLink : followingsLink
+    if (followersCount > followingsCount) {
+      followersLink.click()
+    }
+    else {
+      followingsLink.click()
+    }
   }
 
-  scrollAndLoad() {
+  scroll() {
     window.scrollBy(0,999999);
     let followList = document.querySelector(".follower-following-list")
     let timer = setTimeout(() => {
@@ -55,21 +60,21 @@ class PoshmarkBot {
           follows--;
           if (follows == 0) {
             console.log(follows)
-            window.webkit.messageHandlers.nextUser.postMessage("Success");
+            window.webkit.messageHandlers.FBOTnextUser.postMessage("Success");
             for (let i = 0; i < timers.length; i++) {
               clearTimeout(timers[i]);
             }
           }
           if (document.querySelector("#captcha-popup") != null) {
             console.log(timer)
-            window.webkit.messageHandlers.reset.postMessage("Success");
+            window.webkit.messageHandlers.FBOTreset.postMessage("Success");
             for (let i = 0; i < timers.length; i++) {
               clearTimeout(timers[i]);
             }
           }
           users[i].click();
           followsCount++
-          window.webkit.messageHandlers.followCountIncrement.postMessage(followsCount);
+          window.webkit.messageHandlers.FBOTfollowCountIncrement.postMessage(followsCount);
         }, 100 * follows));
       }
     }
@@ -80,4 +85,45 @@ class PoshmarkBot {
   }
 }
 
-p = new PoshmarkBot()
+class CommentShareBot {
+
+  commentShare() {
+    document.querySelector("textarea.username-autocomplete").value = "comment"
+    document.querySelector("input.btn.add-comment").click()
+    document.querySelector("a.pm-followers-share-link.grey").click()
+    setTimeout(() => {
+      window.webkit.messageHandlers.CSBOTnext.postMessage("Success");
+    }, 2000)
+  }
+
+  getItemLinks() {
+    console.log("hello")
+    let tags = document.querySelectorAll("div.title-condition-con a");
+    let links = [];
+    tags.forEach((tag) => {
+      links.push(tag.href);
+    });
+    window.webkit.messageHandlers.CSBOTgetItemLinks.postMessage(links);
+  }
+
+  scroll() {
+    window.scrollBy(0,999999);
+    let itemList = document.querySelector("#tiles-con")
+    let timer = setTimeout(() => {
+      window.scrollBy(0, -999999)
+      this.getItemLinks();
+    }, 10000)
+    itemList.addEventListener("DOMSubtreeModified", () => {
+      window.scrollBy(0,999999);
+      clearInterval(timer);
+      timer = setTimeout(() => {
+        window.scrollBy(0, -999999)
+        this.getItemLinks();
+      }, 10000);
+    })
+  }
+}
+
+FBOT = new FollowBot()
+CSBOT = new CommentShareBot()
+
