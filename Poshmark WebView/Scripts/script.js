@@ -75,7 +75,7 @@ class FollowBot {
           users[i].click();
           followsCount++
           window.webkit.messageHandlers.FBOTfollowCountIncrement.postMessage(followsCount);
-        }, 100 * follows));
+        }, 5000 * follows));
       }
     }
 
@@ -88,17 +88,17 @@ class FollowBot {
 class CommentShareBot {
 
   commentShare() {
-    document.querySelector("textarea.username-autocomplete").value = "comment"
-    document.querySelector("input.btn.add-comment").click()
+    //document.querySelector("textarea.username-autocomplete").value = "comment"
+    //document.querySelector("input.btn.add-comment").click()
     document.querySelector("a.pm-followers-share-link.grey").click()
     setTimeout(() => {
       window.webkit.messageHandlers.CSBOTnext.postMessage("Success");
-    }, 2000)
+    }, 1000)
   }
 
   getItemLinks() {
     console.log("hello")
-    let tags = document.querySelectorAll("div.title-condition-con a");
+    let tags = document.querySelectorAll("div.title-condition-con a:nth-child(1)");
     let links = [];
     tags.forEach((tag) => {
       links.push(tag.href);

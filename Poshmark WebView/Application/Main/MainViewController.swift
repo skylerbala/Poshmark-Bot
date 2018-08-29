@@ -33,7 +33,6 @@ class MainViewController: UIViewController, WKNavigationDelegate {
     var isCSBOTActive: Bool = false
     var jsFuncStep: Int = 0
     var links: [String] = []
-    var currLinkCounter: Int = 0
     var followsCount: Int = 0
     
     var scriptActions: [UIAlertAction]!
@@ -84,14 +83,12 @@ class MainViewController: UIViewController, WKNavigationDelegate {
         isFBOTActive = true
         jsFuncStep = 0
         webView.loadUrl(string: homeFeedURL)
-        currLinkCounter = 0
     }
     
     func startCSBOT() {
         isCSBOTActive = true
         jsFuncStep = 0
         webView.loadUrl(string: homeFeedURL)
-        currLinkCounter = 0
     }
     
     func stopFBOT() {
@@ -106,7 +103,7 @@ class MainViewController: UIViewController, WKNavigationDelegate {
         if keyPath == #keyPath(WKWebView.isLoading) {
             if jsFuncStep == 0 && !webView.isLoading && isFBOTActive {
                 webView.evaluateJavaScript("FBOT.getUserProfileLinks()") { (data, error) in
-                    self.webView.loadUrl(string: self.links[self.currLinkCounter])
+                    self.webView.loadUrl(string: self.links.removeFirst())
                     self.jsFuncStep += 1
                 }
             }
@@ -180,9 +177,8 @@ class MainViewController: UIViewController, WKNavigationDelegate {
 extension MainViewController: WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         if message.name == "FBOTnextUser", let messageBody = message.body as? String {
-            currLinkCounter += 1
             jsFuncStep = 1
-            webView.loadUrl(string: links[currLinkCounter])
+            webView.loadUrl(string: links.removeFirst())
         }
         
         if message.name == "FBOTuserProfileLinks", let messageBody = message.body as? [String] {
@@ -204,13 +200,12 @@ extension MainViewController: WKScriptMessageHandler {
         if message.name == "CSBOTgetItemLinks", let messageBody = message.body as? [String] {
             links = messageBody
             jsFuncStep += 1
-            webView.loadUrl(string: links[currLinkCounter])
+            webView.loadUrl(string: links.removeFirst())
         }
         
         if message.name == "CSBOTnext", let messageBody = message.body as? String {
-            currLinkCounter += 1
             jsFuncStep = 1
-            webView.loadUrl(string: links[currLinkCounter])
+            webView.loadUrl(string: links.removeFirst())
         }
         
         if message.name == "FBOTfollowCountIncrement", let messageBody = message.body as? Int {
